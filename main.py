@@ -55,6 +55,12 @@ class Ship:
     def draw(self, window):
         window.blit(self.ship_img, (self.x, self.y))
 
+    def get_width(self):
+        return self.ship_img.get_width()
+
+    def get_height(self):
+        return self.ship_img.get_height()
+
 
 class Player(Ship):
     def __init__(self, x, y, health=100):
@@ -63,6 +69,22 @@ class Player(Ship):
         self.laser_img = yellowLaser
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
+
+
+class Enemy(Ship):
+    COLOR_MAP = {
+        "red": (redSpaceShip, redLaser),
+        "green": (greenSpaceShip, greenLaser),
+        "blue": (blueSpaceShip, blueLaser)
+    }
+
+    def __init__(self, x, y, color, health=100):
+        super().__init__(x, y, health)
+        self.ship_img, self.laser_img = self.COLOR_MAP[color]
+        self.mask = pygame.mask.from_surface(self.ship_img)
+
+    def move(self, vel):
+        self.y += vel
 
 
 def main():
@@ -99,11 +121,11 @@ def main():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a] and player.x - player_vel > 0:  # left
             player.x -= player_vel
-        if keys[pygame.K_d] and player.x + player_vel + 100 < Width:  # right
+        if keys[pygame.K_d] and player.x + player_vel + player.get_width < Width:  # right
             player.x += player_vel
         if keys[pygame.K_w] and player.y - player_vel > 0:  # up
             player.y -= player_vel
-        if keys[pygame.K_s] and player.y + player_vel + 100 < Height:  # down
+        if keys[pygame.K_s] and player.y + player_vel + player.get_height < Height:  # down
             player.y += player_vel
 
 
