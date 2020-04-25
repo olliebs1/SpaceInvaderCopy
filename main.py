@@ -243,7 +243,7 @@ def main():
             player.x += player_vel
         if keys[pygame.K_w] and player.y - player_vel > 0:  # up
             player.y -= player_vel
-        if keys[pygame.K_s] and player.y + player_vel + player.get_height() < Height:  # down
+        if keys[pygame.K_s] and player.y + player_vel + player.get_height() + 15 < Height:  # down
             player.y += player_vel
         if keys[pygame.K_SPACE]:
             player.shoot()
@@ -257,7 +257,7 @@ def main():
 
             if collide(enemy, player):
                 player.health -= 10
-                enemies.remove()
+                enemies.remove(enemy)
             elif enemy.y + enemy.get_height() > Height:
                 lives -= 1
                 enemies.remove(enemy)
