@@ -63,7 +63,7 @@ class Laser:
 
 
 class Ship:
-    COOLDOWN = 30
+    COOLDOWN = 20
 
     def __init__(self, x, y, health=100):
         self.x = x
@@ -235,6 +235,10 @@ def main():
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
             enemy.move_lasers(laser_vel, player)
+
+            if random.randrange(0, 120) == 1:
+                enemy.shoot()
+
             if enemy.y + enemy.get_height() > Height:
                 lives -= 1
                 enemies.remove(enemy)
