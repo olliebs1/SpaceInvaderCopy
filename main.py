@@ -219,7 +219,7 @@ def main():
             lost_count += 1
 
         if lost:
-            if lost_count > FPS * 2:
+            if lost_count > FPS * 3:
                 run = False
             else:
                 continue
@@ -228,8 +228,8 @@ def main():
             level += 1
             wave_length += 5
             for i in range(wave_length):
-                enemy = Enemy(random.randrange(50, Width-100),
-                              random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+                enemy = Enemy(random.randrange(
+                    50, Width-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
 
         for event in pygame.event.get():
@@ -252,7 +252,7 @@ def main():
             enemy.move(enemy_vel)
             enemy.move_lasers(laser_vel, player)
 
-            if random.randrange(0, 120) == 1:
+            if random.randrange(0, 2*60) == 1:
                 enemy.shoot()
 
             if collide(enemy, player):
@@ -266,15 +266,14 @@ def main():
 
 
 def main_menu():
-    title_font = pygame.font.SysFont('comicsans', 70)
+    title_font = pygame.font.SysFont("comicsans", 70)
     run = True
     while run:
         WIN.blit(BG, (0, 0))
         title_label = title_font.render(
-            'Press the mouse to begin..', 1, (255, 255, 255))
+            "Press the mouse to begin...", 1, (255, 255, 255))
         WIN.blit(title_label, (Width/2 - title_label.get_width()/2, 350))
         pygame.display.update()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
