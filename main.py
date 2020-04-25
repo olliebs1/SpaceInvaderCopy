@@ -129,6 +129,16 @@ class Player(Ship):
                         if laser in self.lasers:
                             self.lasers.remove(laser)
 
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)
+
+    def healthbar(self, window):
+        pygame.draw.rect(window, (255, 0, 0), (self.x, self.y +
+                                               self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+        pygame.draw.rect(window, (0, 255, 0), (self.x, self.y + self.ship_img.get_height() +
+                                               10, self.ship_img.get_width() * (self.health/self.max_health), 10))
+
 
 class Enemy(Ship):
     COLOR_MAP = {
@@ -144,6 +154,12 @@ class Enemy(Ship):
 
     def move(self, vel):
         self.y += vel
+
+    def shoot(self):
+        if self.cool_down_counter == 0:
+            laser = Laser(self.x-20, self.y, self.laser_img)
+            self.lasers.append(laser)
+            self.cool_down_counter = 1
 
 
 def collide(obj1, obj2):
@@ -167,7 +183,7 @@ def main():
     wave_length = 5
     enemy_vel = 3
 
-    player = Player(300, 650)
+    player = Player(300, 630)
 
     clock = pygame.time.Clock()
 
@@ -239,7 +255,10 @@ def main():
             if random.randrange(0, 120) == 1:
                 enemy.shoot()
 
-            if enemy.y + enemy.get_height() > Height:
+            if collide(enemy, player):
+                player.health -= 10
+                enemies.remove()
+            elif enemy.y + enemy.get_height() > Height:
                 lives -= 1
                 enemies.remove(enemy)
 
