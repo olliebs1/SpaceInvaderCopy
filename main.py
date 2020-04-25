@@ -49,17 +49,17 @@ class Laser:
         self.img = img
         self.mask = pygame.mask.from_surface(self.img)
 
-        def draw(self, window):
-            window.blit(self.img, (self.x, self.y))
+    def draw(self, window):
+        window.blit(self.img, (self.x, self.y))
 
-        def move(self, vel):
-            self.y += vel
+    def move(self, vel):
+        self.y += vel
 
-        def off_screen(self, height):
-            return self.y < height and self.y >= 0
+    def off_screen(self, height):
+        return not(self.y <= height and self.y >= 0)
 
-        def collision(self, obj):
-            return collide(obj, self)
+    def collision(self, obj):
+        return collide(self, obj)
 
 
 class Ship:
@@ -97,7 +97,7 @@ class Ship:
 
     def shoot(self):
         if self.cool_down_counter == 0:
-            laser = Laser(x, y, self.laser_img)
+            laser = Laser(self.x, self.y, self.laser_img)
             self.lasers.append(laser)
             self.cool_down_counter = 1
 
@@ -126,7 +126,8 @@ class Player(Ship):
                 for obj in objs:
                     if laser.collision(obj):
                         objs.remove(obj)
-                        self.lasers.remove(laser)
+                        if laser in self.lasers:
+                            self.lasers.remove(laser)
 
 
 class Enemy(Ship):
@@ -160,6 +161,7 @@ def main():
     lost_font = pygame.font.SysFont('comicsans', 60)
 
     player_vel = 5
+    laser_vel = 5
 
     enemies = []
     wave_length = 5
@@ -232,9 +234,12 @@ def main():
 
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
+            enemy.move_lasers(laser_vel, player)
             if enemy.y + enemy.get_height() > Height:
                 lives -= 1
                 enemies.remove(enemy)
+
+        player.move_lasers(-laser_vel, enemies)
 
 
 main()
